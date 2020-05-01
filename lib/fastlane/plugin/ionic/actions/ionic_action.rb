@@ -148,9 +148,9 @@ module Fastlane
         end
 
         if params[:platform].to_s == 'ios'
-          sh "ionic cordova compile #{params[:platform]} #{args.join(' ')} -- #{ios_args}" 
+          sh "ionic cordova build #{params[:platform]} #{args.join(' ')} -- #{ios_args}" 
         elsif params[:platform].to_s == 'android'
-          sh "ionic cordova compile #{params[:platform]} #{args.join(' ')} -- -- #{android_args}" 
+          sh "ionic cordova build #{params[:platform]} #{args.join(' ')} -- -- #{android_args}" 
         end
       end
 
