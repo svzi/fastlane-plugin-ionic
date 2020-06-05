@@ -93,6 +93,7 @@ module Fastlane
       # actual building! (run #2)
       def self.build(params)
         args = [params[:release] ? '--release' : '--debug']
+        args << '--uglifyjs --minifyjs --minifycss --aot' if params[:release]
         args << '--device' if params[:device]
         args << '--prod' if params[:prod]
         args << '--browserify' if params[:browserify]
