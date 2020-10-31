@@ -14,6 +14,7 @@ module Fastlane
         key_password: 'password',
         keystore_alias: 'alias',
         build_number: 'versionCode',
+        package_type: 'packageType',
         version_name: 'versionName'
       }
 
@@ -160,9 +161,14 @@ module Fastlane
         app_name = self.get_app_name
         build_type = is_release ? 'release' : 'debug'
 
-        ENV['CORDOVA_ANDROID_RELEASE_BUILD_PATH'] = "./platforms/android/app/build/outputs/apk/release/app-#{build_type}.apk"
-        ENV['CORDOVA_IOS_RELEASE_BUILD_PATH'] = "./platforms/ios/build/device/#{app_name}.ipa"
+        # Update the build path accordingly if Android is being 
+        # built as an Android Application Bundle.
+        android_package_type = params[:package_type] || 'apk'
+        android_package_extension = android_package_type == 'bundle' ? '.aab' : '.apk'
 
+        ENV['CORDOVA_ANDROID_RELEASE_BUILD_PATH'] = "./platforms/android/app/build/outputs/#{android_package_type}/#{build_type}/app-#{build_type}#{android_package_extension}"
+        ENV['CORDOVA_IOS_RELEASE_BUILD_PATH'] = "./platforms/ios/build/device/#{app_name}.ipa"
+        
         # TODO: https://github.com/bamlab/fastlane-plugin-cordova/issues/7
       end
 
@@ -251,6 +257,15 @@ module Fastlane
             default_value: ''
           ),
           FastlaneCore::ConfigItem.new(
+            key: :package_type,
+            env_name: "CORDOVA_ANDROID_PACKAGE_TYPE",
+            description: "This will determine what type of Android build is generated. Valid options are apk or bundle",
+            is_string: true,
+            default_value: 'apk',
+            verify_block: proc do |value|
+              UI.user_error!("Valid options are apk or bundle.") unless ['apk', 'bundle'].include? value
+            end
+          ),FastlaneCore::ConfigItem.new(
             key: :keystore_path,
             env_name: "CORDOVA_ANDROID_KEYSTORE_PATH",
             description: "Path to the Keystore for Android",
@@ -340,7 +355,7 @@ module Fastlane
 
       def self.output
         [
-          ['CORDOVA_ANDROID_RELEASE_BUILD_PATH', 'Path to the signed release APK if it was generated'],
+          ['CORDOVA_ANDROID_RELEASE_BUILD_PATH', 'Path to the signed release APK or AAB if it was generated'],
           ['CORDOVA_IOS_RELEASE_BUILD_PATH', 'Path to the signed release IPA if it was generated']
         ]
       end
