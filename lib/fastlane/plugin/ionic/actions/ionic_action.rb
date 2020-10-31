@@ -168,8 +168,6 @@ module Fastlane
 
         ENV['CORDOVA_ANDROID_RELEASE_BUILD_PATH'] = "./platforms/android/app/build/outputs/#{android_package_type}/#{build_type}/app-#{build_type}#{android_package_extension}"
         ENV['CORDOVA_IOS_RELEASE_BUILD_PATH'] = "./platforms/ios/build/device/#{app_name}.ipa"
-        
-        # TODO: https://github.com/bamlab/fastlane-plugin-cordova/issues/7
       end
 
       def self.run(params)
@@ -261,11 +259,9 @@ module Fastlane
             env_name: "CORDOVA_ANDROID_PACKAGE_TYPE",
             description: "This will determine what type of Android build is generated. Valid options are apk or bundle",
             is_string: true,
-            default_value: 'apk',
-            verify_block: proc do |value|
-              UI.user_error!("Valid options are apk or bundle.") unless ['apk', 'bundle'].include? value
-            end
-          ),FastlaneCore::ConfigItem.new(
+            default_value: 'apk'
+          ),
+          FastlaneCore::ConfigItem.new(
             key: :keystore_path,
             env_name: "CORDOVA_ANDROID_KEYSTORE_PATH",
             description: "Path to the Keystore for Android",
