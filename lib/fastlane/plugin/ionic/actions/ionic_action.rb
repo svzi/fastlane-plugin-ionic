@@ -166,7 +166,8 @@ module Fastlane
         android_package_type = params[:package_type] || 'apk'
         android_package_extension = android_package_type == 'bundle' ? '.aab' : '.apk'
 
-        ENV['CORDOVA_ANDROID_RELEASE_BUILD_PATH'] = "./platforms/android/app/build/outputs/#{android_package_type}/#{build_type}/app-#{build_type}#{android_package_extension}"
+        ENV['CORDOVA_ANDROID_RELEASE_BUILD_PATH'] = "./platforms/android/app/build/outputs/apk/release/app-#{build_type}.apk"
+        #ENV['CORDOVA_ANDROID_RELEASE_BUILD_PATH'] = "./platforms/android/app/build/outputs/#{android_package_type}/#{build_type}/app-#{build_type}#{android_package_extension}"
         ENV['CORDOVA_IOS_RELEASE_BUILD_PATH'] = "./platforms/ios/build/device/#{app_name}.ipa"
       end
 
@@ -351,7 +352,7 @@ module Fastlane
 
       def self.output
         [
-          ['CORDOVA_ANDROID_RELEASE_BUILD_PATH', 'Path to the signed release APK or AAB if it was generated'],
+          ['CORDOVA_ANDROID_RELEASE_BUILD_PATH', 'Path to the signed release APK if it was generated'],
           ['CORDOVA_IOS_RELEASE_BUILD_PATH', 'Path to the signed release IPA if it was generated']
         ]
       end
